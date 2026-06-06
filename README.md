@@ -24,8 +24,8 @@ Key concepts demonstrated:
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Java | 17 | Core language |
-| Spring Boot | 3.0.0 | Dependency management, logging (SLF4J) |
+| Java | 11 | Core language |
+| Spring Boot | 2.7.15 | Dependency management, logging (SLF4J) |
 | Maven | 3.9.6 | Build automation |
 | JUnit 5 | 5.9.3 | Unit testing |
 | Docker | - | Containerization |
@@ -127,7 +127,7 @@ Exception
 ## 6. How to Run
 
 ### Prerequisites
-- Java 17+
+- Java 11+
 - Maven 3.6+
 
 ### Run with script (recommended)
