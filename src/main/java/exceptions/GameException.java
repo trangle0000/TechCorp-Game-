@@ -1,24 +1,30 @@
 package exceptions;
 
-/**
- * Base exception class for all game-related errors.
- */
 public class GameException extends Exception {
 
-    /**
-     * Creates a game exception with a message.
-     * @param message the error message
-     */
+    public enum ErrorSeverity { LOW, MEDIUM, HIGH, CRITICAL }
+
+    private String errorCode;
+    private ErrorSeverity severity;
+
     public GameException(String message) {
         super(message);
+        this.errorCode = "GAME_000";
+        this.severity = ErrorSeverity.MEDIUM;
     }
 
-    /**
-     * Creates a game exception with a message and cause.
-     * @param message the error message
-     * @param cause the underlying cause
-     */
     public GameException(String message, Throwable cause) {
         super(message, cause);
+        this.errorCode = "GAME_000";
+        this.severity = ErrorSeverity.MEDIUM;
     }
+
+    public GameException(String errorCode, String message, ErrorSeverity severity) {
+        super(message);
+        this.errorCode = errorCode;
+        this.severity = severity;
+    }
+
+    public String getErrorCode() { return errorCode; }
+    public ErrorSeverity getSeverity() { return severity; }
 }
