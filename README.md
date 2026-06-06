@@ -1,167 +1,211 @@
-# TechCorp Game - Java Decision-Making Game - Final Project Java
+# TechCorp Duel Game - Final Project Java Programming
 
-A turn-based business management simulation game built with **Java** and **Spring Boot**.
+A console-based turn-by-turn strategy game where you compete against an AI opponent to build the most successful tech company.
+
+**Student**: Trang Van Le (140036)
+
+---
 
 ## 1. Project Overview
 
-TechCorp Game is a console-based decision-making game where the player manages a tech company over multiple rounds, competing against an AI opponent. The application demonstrates key software engineering concepts including:
+TechCorp Duel Game is a console application built with Java and Spring Boot. Players manage a tech company by hiring employees, starting projects, and competing against an AI opponent across 12 rounds. The player with the highest score (cash + reputation) at the end wins.
 
-- Object-oriented design (inheritance, polymorphism, encapsulation)
-- Layered architecture (Domain, Engine, Exceptions, Constants)
-- Custom exception handling
-- Input validation and error handling
-- Turn-based game logic with AI opponent
-- Maven-based build automation
-- Unit testing with JUnit 5
+Key concepts demonstrated:
+- Object-Oriented Programming (inheritance, polymorphism, encapsulation, abstraction)
+- Custom exception hierarchy with error codes and severity levels
+- Layered architecture (Domain / Engine / Exceptions / Constants)
+- Abstract classes and interfaces (`Comparable<Employee>`)
+- Strategy pattern (AI opponent with AGGRESSIVE / BALANCED / DEFENSIVE strategies)
+- Maven build automation and Spring Boot dependency management
 
-## 2. Features
+---
 
-- **Turn-Based Gameplay** - Player vs AI over configurable rounds
-- **Employee Management** - Hire Developer, Manager, or Tester with different skills
-- **Project Management** - Start projects with different difficulties (Easy/Medium/Hard/Critical)
-- **AI Opponent** - AI uses AGGRESSIVE, BALANCED, or DEFENSIVE strategy
-- **Financial System** - Track cash, salaries, project budgets and revenue
-- **Scoring System** - Final score based on cash + reputation
-- **Exception Handling** - Custom exception hierarchy (GameException, InsufficientFundsException, InvalidProjectException)
-- **Input Validation** - All constructor arguments and user inputs validated
+## 2. Tech Stack
 
-## 3. Tech Stack
+| Technology | Version | Purpose |
+|-----------|---------|---------|
+| Java | 17 | Core language |
+| Spring Boot | 3.0.0 | Dependency management, logging (SLF4J) |
+| Maven | 3.9.6 | Build automation |
+| JUnit 5 | 5.9.3 | Unit testing |
+| Docker | - | Containerization |
+| Git & GitHub | - | Version control |
 
-- **Language**: Java 11
-- **Framework**: Spring Boot 2.7.15
-- **Build Tool**: Maven 3.9.6
-- **Testing**: JUnit 5
-- **Container**: Docker
-- **Version Control**: Git & GitHub
+---
 
-## 4. Project Structure
+## 3. Project Structure
 
 ```
-TechCorp-Game/
+TechCorp-game/
 ├── src/
 │   └── main/
 │       └── java/
 │           ├── Main.java                          # Entry point
+│           ├── constants/
+│           │   └── GameConstants.java             # All game configuration constants
 │           ├── domain/
-│           │   ├── Employee.java                  # Abstract base class
-│           │   ├── Developer.java                 # 1.2x productivity
-│           │   ├── Manager.java                   # 0.8x productivity
-│           │   ├── Tester.java                    # 0.9x productivity
-│           │   ├── Company.java                   # Company state management
-│           │   └── Project.java                   # Project with status lifecycle
+│           │   ├── Company.java                   # Company model (cash, employees, projects)
+│           │   ├── Employee.java                  # Abstract base class (Comparable<Employee>)
+│           │   ├── Developer.java                 # 1.2x productivity, skill×5000 salary
+│           │   ├── Manager.java                   # 0.8x productivity, skill×7000 salary
+│           │   ├── Tester.java                    # 0.9x productivity, skill×3000 salary
+│           │   └── Project.java                   # Project with Status & Difficulty enums
 │           ├── engine/
-│           │   ├── GameEngine.java                # Core game loop
-│           │   └── AIPlayer.java                  # AI opponent logic
-│           ├── exceptions/
-│           │   ├── GameException.java             # Base exception
-│           │   ├── InsufficientFundsException.java
-│           │   └── InvalidProjectException.java
-│           └── constants/
-│               └── GameConstants.java             # Game configuration
-├── pom.xml
-├── Dockerfile
+│           │   ├── GameEngine.java                # Main game loop, player input handling
+│           │   └── AIPlayer.java                  # AI opponent with strategy selection
+│           └── exceptions/
+│               ├── GameException.java             # Base exception (ErrorSeverity enum)
+│               ├── InsufficientFundsException.java # Error code: FUNDS_001
+│               └── InvalidProjectException.java   # Error code: PROJECT_001
+├── pom.xml                                        # Maven dependencies
+├── Dockerfile                                     # Docker build configuration
 ├── run.sh                                         # Quick run script
 └── README.md
 ```
 
-## 5. How to Run
+---
 
-### Option 1: Using run script (recommended)
-```bash
-./run.sh
+## 4. OOP Concepts
+
+### 4.1 Employee Hierarchy (Inheritance & Polymorphism)
+
+```
+Employee (Abstract)  ← implements Comparable<Employee>
+├── Developer        → getProductivity() = 1.2x, salary = skill × 5,000
+├── Manager          → getProductivity() = 0.8x, salary = skill × 7,000
+└── Tester           → getProductivity() = 0.9x, salary = skill × 3,000
 ```
 
-### Option 2: Manual build and run
-```bash
-# Build
-mvn clean package -DskipTests
+- `Employee` is abstract with abstract methods: `getProductivity()`, `getRole()`
+- Each subclass overrides `getProductivity()` and `getContribution()`
+- `compareTo()` sorts employees by skill level (descending)
 
-# Run
-java -jar target/techcorp-game-1.0.0.jar
+### 4.2 Custom Exception Hierarchy
+
+```
+Exception
+└── GameException (base, with ErrorSeverity enum: LOW/MEDIUM/HIGH/CRITICAL)
+    ├── InsufficientFundsException  → FUNDS_001, Severity: MEDIUM
+    └── InvalidProjectException     → PROJECT_001, Severity: HIGH
 ```
 
-### Option 3: Spring Boot
-```bash
-mvn spring-boot:run
-```
+### 4.3 Key Classes
 
-## 6. Gameplay
+| Class | Responsibility |
+|-------|---------------|
+| `Company` | Manages cash, reputation, employees, projects. Score = cash + reputation × 1000 |
+| `Project` | Status enum (NOT_STARTED/IN_PROGRESS/COMPLETED/FAILED), Difficulty enum (EASY/MEDIUM/HARD/CRITICAL) |
+| `GameEngine` | Main game loop, player input, advance projects each round |
+| `AIPlayer` | Static class, selects strategy based on cash ratio |
+| `GameConstants` | 40+ constants, validated on class load via static initializer |
 
-Each round the player chooses:
-1. **Hire Employee** - Choose type (Developer/Manager/Tester) and skill level (1-100)
-2. **Start Strategic Project** - Choose difficulty (Easy/Medium/Hard/Critical)
-3. **Skip** - Pass this round
+---
 
-The AI opponent takes its turn automatically after the player.
+## 5. Game Rules
 
-### Employee Types
-| Type | Salary | Productivity |
-|------|--------|--------------|
-| Developer | skill × $5,000 | 1.2x |
-| Manager | skill × $7,000 | 0.8x |
-| Tester | skill × $3,000 | 0.9x |
+- **Starting budget**: $100,000 each (player and AI)
+- **Rounds**: 12 total
+- **Each round**, player chooses:
+  1. **Hire Employee** — choose type (Developer/Manager/Tester) and skill level (1–100)
+  2. **Start Strategic Project** — choose difficulty (Easy/Medium/Hard/Critical)
+  3. **Skip**
+- **Projects** complete after a set number of rounds and reward cash + reputation
+- **Score** = Final Cash + (Total Reputation × 1,000)
+- Highest score wins!
 
-### Project Difficulties
-| Difficulty | Budget | Revenue | Success Rate | Deadline |
-|------------|--------|---------|--------------|----------|
+### Project Options
+
+| Difficulty | Cost | Revenue | Success Rate | Deadline |
+|-----------|------|---------|-------------|---------|
 | Easy | $5,000 | $15,000 | 90% | 3 rounds |
 | Medium | $10,000 | $30,000 | 75% | 4 rounds |
 | Hard | $20,000 | $60,000 | 60% | 5 rounds |
 | Critical | $40,000 | $120,000 | 40% | 6 rounds |
 
-## 7. Docker
+---
 
+## 6. How to Run
+
+### Prerequisites
+- Java 17+
+- Maven 3.6+
+
+### Run with script (recommended)
 ```bash
-# Build image
-docker build -t techcorp-game:1.0.0 .
+./run.sh
+```
 
-# Run container
+### Run manually
+```bash
+mvn clean package -DskipTests -q
+java -jar target/techcorp-game-1.0.0.jar
+```
+
+### Run with Docker
+```bash
+docker build -t techcorp-game:1.0.0 .
 docker run -it techcorp-game:1.0.0
 ```
 
-## 8. Game Classes
+---
 
-### Domain Layer
-- **Company** - Manages cash, reputation, employees, projects. Score = cash + reputation × 100
-- **Employee** - Abstract base with skill (1-100), salary, experience. Implements Comparable
-- **Developer** - 1.2x productivity, salary = skill × 5000
-- **Manager** - 0.8x productivity, salary = skill × 7000
-- **Tester** - 0.9x productivity, salary = skill × 3000
-- **Project** - Status lifecycle: NOT_STARTED → IN_PROGRESS → COMPLETED/FAILED
+## 7. Game Constants (GameConstants.java)
 
-### Engine Layer
-- **GameEngine** - Main game loop, player input handling, round management
-- **AIPlayer** - Three strategies: AGGRESSIVE (Hard projects), BALANCED (Medium), DEFENSIVE (Easy)
+Key constants validated on startup via static initializer block:
 
-### Exception Layer
-- **GameException** - Base exception with errorCode and severity (LOW/MEDIUM/HIGH/CRITICAL)
-- **InsufficientFundsException** - Thrown when cash < required amount
-- **InvalidProjectException** - Thrown for invalid project operations
+| Constant | Value |
+|----------|-------|
+| PLAYER_STARTING_BUDGET | $100,000 |
+| AI_STARTING_BUDGET | $100,000 |
+| GAME_ROUNDS | 12 |
+| DEVELOPER_SALARY_MULTIPLIER | 5,000 |
+| MANAGER_SALARY_MULTIPLIER | 7,000 |
+| TESTER_SALARY_MULTIPLIER | 3,000 |
+| DEVELOPER_PRODUCTIVITY | 1.2 |
+| MANAGER_PRODUCTIVITY | 0.8 |
+| TESTER_PRODUCTIVITY | 0.9 |
+| REPUTATION_MULTIPLIER | 1,000 |
 
-## 9. Starting Values
+---
 
-- Starting Cash: $100,000 (both Player and AI)
-- Total Rounds: 10
-- Starting Skill (default): 50
+## 8. AI Opponent
+
+The AI uses a strategy based on its current cash ratio:
+
+| Cash Ratio | Strategy | Behavior |
+|-----------|----------|---------|
+| ≥ 70% | AGGRESSIVE | Hire employees + start Hard projects |
+| 30–70% | BALANCED | Maintain workforce + start Medium projects |
+| ≤ 30% | DEFENSIVE | Start Easy projects, emergency hiring only |
+
+---
+
+## 9. Running Tests
+
+```bash
+mvn test
+```
+
+---
 
 ## 10. Learning Outcomes
 
-This project demonstrates:
-- Java OOP principles (inheritance, polymorphism, encapsulation, abstraction)
+- Java OOP: abstract classes, inheritance, polymorphism, interfaces
 - Custom exception hierarchy with error codes and severity levels
-- Input validation at all system boundaries
-- Turn-based game logic with AI decision making
+- Static initializer blocks for configuration validation
+- Strategy pattern for AI decision-making
 - Maven project structure and build automation
+- Spring Boot for logging (SLF4J with Logback)
 - Docker containerization
-- Layered architecture pattern
+- Git version control and GitHub collaboration
+
+---
 
 ## 11. Author
 
-**Trang Van Le**
+**Trang Van Le** — Student ID: 140036
 - GitHub: [@trangle0000](https://github.com/trangle0000)
 
 ---
 
-**Last Updated**: June 2026  
-**Java Version**: 11  
-**Spring Boot Version**: 2.7.15
+*Java Programming Final Project — 2026*
