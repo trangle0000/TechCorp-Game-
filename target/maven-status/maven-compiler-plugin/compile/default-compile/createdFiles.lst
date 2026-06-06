@@ -1,0 +1,3 @@
+com\techcorp\TechCorpApplication.class
+com\techcorp\api\HealthController.class
+com\techcorp\api\GameController.class
