@@ -1,4 +1,3 @@
-cat > src/main/java/constants/GameConstants.java << 'EOF'
 package constants;
 
 public class GameConstants {
@@ -15,4 +14,3 @@ public class GameConstants {
     public static final double MAX_MANAGER_SALARY = 700_000.0;
     public static final double MAX_TESTER_SALARY = 300_000.0;
 }
-EOF

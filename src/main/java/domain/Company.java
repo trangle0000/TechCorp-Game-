@@ -1,4 +1,3 @@
-cat > src/main/java/domain/Company.java << 'EOF'
 package domain;
 
 import exceptions.InsufficientFundsException;
@@ -55,4 +54,3 @@ public class Company {
                 name, cash, totalReputation, employees.size(), projects.size());
     }
 }
-EOF

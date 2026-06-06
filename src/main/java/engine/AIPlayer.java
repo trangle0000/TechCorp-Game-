@@ -1,4 +1,3 @@
-cat > src/main/java/engine/AIPlayer.java << 'EOF'
 package engine;
 
 import domain.*;
@@ -16,7 +15,7 @@ public class AIPlayer {
             } else {
                 startProject(company, strategy, round);
             }
-        } catch (InsufficientFundsException | InvalidProjectException e) {
+        } catch (Exception e) {
             System.out.println("[AI] Skipping turn: " + e.getMessage());
         }
     }
@@ -28,7 +27,7 @@ public class AIPlayer {
         return Strategy.DEFENSIVE;
     }
 
-    private static void hireEmployee(Company company, Strategy strategy) throws InsufficientFundsException {
+    private static void hireEmployee(Company company, Strategy strategy) throws Exception {
         int skill = strategy == Strategy.AGGRESSIVE ? 70 : strategy == Strategy.BALANCED ? 50 : 30;
         String name = "AI-Dev-" + (company.getEmployeeCount() + 1);
         Employee emp = new Developer(name, skill);
@@ -37,31 +36,24 @@ public class AIPlayer {
         System.out.printf("[AI Corp] Hired %s (skill %d)%n", name, skill);
     }
 
-    private static void startProject(Company company, Strategy strategy, int round) throws InsufficientFundsException, InvalidProjectException {
+    private static void startProject(Company company, Strategy strategy, int round) throws Exception {
         Project.ProjectDifficulty diff;
         double budget, revenue;
         int deadline;
-
         switch (strategy) {
-            case AGGRESSIVE:
-                diff = Project.ProjectDifficulty.HARD; budget = 20_000; revenue = 60_000; deadline = 5; break;
-            case BALANCED:
-                diff = Project.ProjectDifficulty.MEDIUM; budget = 10_000; revenue = 30_000; deadline = 4; break;
-            default:
-                diff = Project.ProjectDifficulty.EASY; budget = 5_000; revenue = 15_000; deadline = 3; break;
+            case AGGRESSIVE: diff = Project.ProjectDifficulty.HARD;   budget = 20_000; revenue = 60_000;  deadline = 5; break;
+            case BALANCED:   diff = Project.ProjectDifficulty.MEDIUM; budget = 10_000; revenue = 30_000;  deadline = 4; break;
+            default:         diff = Project.ProjectDifficulty.EASY;   budget = 5_000;  revenue = 15_000;  deadline = 3; break;
         }
-
-        if (company.getCash() < budget) throw new InsufficientFundsException("AI Project", budget, company.getCash());
-
+        if (company.getCash() < budget)
+            throw new InsufficientFundsException("AI Project", budget, company.getCash());
         Project project = new Project("AI-Project-" + round, budget, revenue, diff, true, deadline);
         for (Employee e : company.getEmployees()) {
             if (e.isActive()) project.assignEmployee(e);
         }
-
         company.deductCash(budget);
         company.addProject(project);
         project.startProject(round);
         System.out.printf("[AI Corp] Started project [%s difficulty]%n", diff);
     }
 }
-EOF

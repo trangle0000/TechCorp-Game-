@@ -1,4 +1,3 @@
-cat > src/main/java/engine/GameEngine.java << 'EOF'
 package engine;
 
 import domain.*;
@@ -172,10 +171,8 @@ public class GameEngine {
         System.out.println("=".repeat(40));
         System.out.println(playerCompany);
         System.out.println(aiCompany);
-
         double playerScore = playerCompany.getScore();
         double aiScore = aiCompany.getScore();
-
         if (playerScore > aiScore) System.out.println("\nYOU WIN!");
         else if (aiScore > playerScore) System.out.println("\nAI WINS!");
         else System.out.println("\nIT'S A TIE!");
@@ -187,4 +184,3 @@ public class GameEngine {
     public Company getPlayerCompany() { return playerCompany; }
     public Company getAiCompany() { return aiCompany; }
 }
-EOF

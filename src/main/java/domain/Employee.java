@@ -1,4 +1,3 @@
-cat > src/main/java/domain/Employee.java << 'EOF'
 package domain;
 
 public abstract class Employee implements Comparable<Employee> {
@@ -46,4 +45,3 @@ public abstract class Employee implements Comparable<Employee> {
         return String.format("%s [%s] skill=%d salary=%.0f", name, getRole(), skill, salary);
     }
 }
-EOF

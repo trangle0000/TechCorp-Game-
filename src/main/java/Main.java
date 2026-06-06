@@ -1,4 +1,3 @@
-cat > src/main/java/Main.java << 'EOF'
 import engine.GameEngine;
 import constants.GameConstants;
 
@@ -12,4 +11,3 @@ public class Main {
         engine.runGame();
     }
 }
-EOF

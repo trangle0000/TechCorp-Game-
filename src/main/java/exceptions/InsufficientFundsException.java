@@ -1,4 +1,3 @@
-cat > src/main/java/exceptions/InsufficientFundsException.java << 'EOF'
 package exceptions;
 
 public class InsufficientFundsException extends GameException {
@@ -16,4 +15,3 @@ public class InsufficientFundsException extends GameException {
     public double getAvailable() { return available; }
     public double getShortfall() { return required - available; }
 }
-EOF

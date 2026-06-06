@@ -1,4 +1,3 @@
-cat > src/main/java/domain/Tester.java << 'EOF'
 package domain;
 
 public class Tester extends Employee {
@@ -9,4 +8,3 @@ public class Tester extends Employee {
     @Override public String getRole() { return "Tester"; }
     @Override public double getProductivity() { return 0.9; }
 }
-EOF

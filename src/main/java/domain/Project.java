@@ -1,4 +1,3 @@
-cat > src/main/java/domain/Project.java << 'EOF'
 package domain;
 
 import java.util.*;
@@ -82,4 +81,3 @@ public class Project {
     public int getAssignedEmployeeCount() { return assignedEmployees.size(); }
     public List<Employee> getAssignedEmployees() { return assignedEmployees; }
 }
-EOF
