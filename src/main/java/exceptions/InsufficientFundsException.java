@@ -6,7 +6,7 @@ public class InsufficientFundsException extends GameException {
 
     public InsufficientFundsException(String action, double required, double available) {
         super("FUNDS_001", String.format("Insufficient funds for %s. Required: $%.0f, Available: $%.0f",
-                action, required, available), ErrorSeverity.HIGH);
+                action, required, available), GameException.ErrorSeverity.HIGH);
         this.required = required;
         this.available = available;
     }
