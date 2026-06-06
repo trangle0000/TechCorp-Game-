@@ -1,3 +1,16 @@
-/workspaces/TechCorp-Game/src/main/java/com/techcorp/api/HealthController.java
+/workspaces/TechCorp-Game/src/main/java/domain/Project.java
+/workspaces/TechCorp-Game/src/main/java/exceptions/InsufficientFundsException.java
+/workspaces/TechCorp-Game/src/main/java/domain/Company.java
+/workspaces/TechCorp-Game/src/main/java/domain/Manager.java
+/workspaces/TechCorp-Game/src/main/java/domain/Tester.java
 /workspaces/TechCorp-Game/src/main/java/com/techcorp/api/GameController.java
+/workspaces/TechCorp-Game/src/main/java/domain/Employee.java
+/workspaces/TechCorp-Game/src/main/java/engine/GameEngine.java
 /workspaces/TechCorp-Game/src/main/java/com/techcorp/TechCorpApplication.java
+/workspaces/TechCorp-Game/src/main/java/com/techcorp/api/HealthController.java
+/workspaces/TechCorp-Game/src/main/java/exceptions/InvalidProjectException.java
+/workspaces/TechCorp-Game/src/main/java/Main.java
+/workspaces/TechCorp-Game/src/main/java/exceptions/GameException.java
+/workspaces/TechCorp-Game/src/main/java/engine/AIPlayer.java
+/workspaces/TechCorp-Game/src/main/java/constants/GameConstants.java
+/workspaces/TechCorp-Game/src/main/java/domain/Developer.java
