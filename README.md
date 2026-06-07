@@ -149,7 +149,7 @@ docker run -it techcorp-game:1.0.0
 
 ---
 
-## 7. 🚀 Live Deployment
+## 7. Live Deployment
 **Deployment Platform:** Render.com  
 **Status Dashboard:** https://dashboard.render.com/web/srv-d85i0pr7uimc739hrrr0/deploys/dep-d85i8brbc2fs73brirgg?r=2026-05-18%4014%3A36%3A35%7E2026-05-18%4014%3A40%3A08
 
