@@ -149,7 +149,17 @@ docker run -it techcorp-game:1.0.0
 
 ---
 
-## 7. Game Constants (GameConstants.java)
+## 7. 🚀 Live Deployment
+**Deployment Platform:** Render.com  
+**Status Dashboard:** https://dashboard.render.com/web/srv-d85i0pr7uimc739hrrr0/deploys/dep-d85i8brbc2fs73brirgg?r=2026-05-18%4014%3A36%3A35%7E2026-05-18%4014%3A40%3A08
+
+The application is deployed and monitored on Render.com. Click the link above to view:
+- Deployment logs
+- Build status
+- Application health
+- Recent deployment history
+
+## 8. Game Constants (GameConstants.java)
 
 Key constants validated on startup via static initializer block:
 
@@ -168,7 +178,7 @@ Key constants validated on startup via static initializer block:
 
 ---
 
-## 8. AI Opponent
+## 9. AI Opponent
 
 The AI uses a strategy based on its current cash ratio:
 
@@ -180,7 +190,7 @@ The AI uses a strategy based on its current cash ratio:
 
 ---
 
-## 9. Running Tests
+## 10. Running Tests
 
 ```bash
 mvn test
@@ -188,7 +198,7 @@ mvn test
 
 ---
 
-## 10. Learning Outcomes
+## 11. Learning Outcomes
 
 - Java OOP: abstract classes, inheritance, polymorphism, interfaces
 - Custom exception hierarchy with error codes and severity levels
@@ -201,7 +211,7 @@ mvn test
 
 ---
 
-## 11. Author
+## 12. Author
 
 **Trang Van Le** — Student ID: 140036
 - GitHub: [@trangle0000](https://github.com/trangle0000)
