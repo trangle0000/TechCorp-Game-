@@ -150,14 +150,10 @@ docker run -it techcorp-game:1.0.0
 ---
 
 ## 7. Live Deployment
-**Deployment Platform:** Render.com  
-**Status Dashboard:** https://dashboard.render.com/web/srv-d85i0pr7uimc739hrrr0/deploys/dep-d85i8brbc2fs73brirgg?r=2026-05-18%4014%3A36%3A35%7E2026-05-18%4014%3A40%3A08
 
-The application is deployed and monitored on Render.com. Click the link above to view:
-- Deployment logs
-- Build status
-- Application health
-- Recent deployment history
+The game is deployed and accessible at:
+**URL**: [https://techcorp-game-api.onrender.com](https://techcorp-game-api.onrender.com)
+> Deployed on [Render.com](https://render.com) using Docker containerization.
 
 ## 8. Game Constants (GameConstants.java)
 
