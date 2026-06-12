@@ -285,4 +285,3 @@ public class GameEngine {
     public Company getPlayerCompany() { return playerCompany; }
     public Company getAiCompany() { return aiCompany; }
 }
-EOF
