@@ -20,7 +20,7 @@ public class GameEngine {
         if (playerBudget <= 0) throw new IllegalArgumentException("Player budget must be positive");
         if (aiBudget <= 0) throw new IllegalArgumentException("AI budget must be positive");
         if (rounds <= 0) throw new IllegalArgumentException("Rounds must be positive");
-        this.playerCompany = new Company("Player Corp", playerBudget);
+        this.playerCompany = new Company("TrangLe Company", playerBudget);
         this.aiCompany = new Company("AI Corp", aiBudget);
         this.totalRounds = rounds;
         this.currentRound = 0;
@@ -46,7 +46,7 @@ public class GameEngine {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("         WELCOME TO TECHCORP DUEL GAME");
         System.out.println("=".repeat(60));
-        System.out.println("  Build the most successful tech company in 12 rounds!");
+        System.out.println("  Build the most successful tech company in 10 rounds!");
         System.out.println("  Hire employees, start projects, beat the AI opponent.");
         System.out.println("  Score = Final Cash + (Reputation x 100)");
         System.out.println("=".repeat(60) + "\n");
@@ -58,7 +58,7 @@ public class GameEngine {
         System.out.println("\n" + "=".repeat(60));
         System.out.printf("  ROUND %d / %d%n", currentRound, totalRounds);
         System.out.println("  ┌─────────────────────────┬─────────────────────────┐");
-        System.out.printf("  │ YOUR COMPANY            │ AI COMPANY              │%n");
+        System.out.printf("  │ %-23s │ %-23s │%n", playerCompany.getName(), aiCompany.getName());
         System.out.printf("  │ Cash: $%-17.0f│ Cash: $%-17.0f│%n",
                 playerCompany.getCash(), aiCompany.getCash());
         System.out.printf("  │ Reputation: %-12.0f│ Reputation: %-12.0f│%n",
@@ -105,7 +105,7 @@ public class GameEngine {
     }
 
     private void displayCompanyStatus() {
-        System.out.println("\n  ── COMPANY STATUS ──────────────────────────────────");
+        System.out.println("\n  -- COMPANY STATUS ------------------------------------------");
         System.out.printf("  Company : %s%n", playerCompany.getName());
         System.out.printf("  Cash    : $%.0f%n", playerCompany.getCash());
         System.out.printf("  Rep     : %.0f pts%n", playerCompany.getTotalReputation());
@@ -114,14 +114,14 @@ public class GameEngine {
                 .mapToDouble(Employee::getSalary).sum();
         System.out.printf("  Total Salary Cost: $%.0f%n", totalSalary);
         if (!playerCompany.getEmployees().isEmpty()) {
-            System.out.println("  ┌────────────────────┬────────────┬──────────┐");
-            System.out.println("  │ Name               │ Role       │ Salary   │");
-            System.out.println("  ├────────────────────┼────────────┼──────────┤");
+            System.out.println("  +--------------------+------------+----------+");
+            System.out.println("  | Name               | Role       | Salary   |");
+            System.out.println("  +--------------------+------------+----------+");
             for (Employee e : playerCompany.getEmployees()) {
-                System.out.printf("  │ %-18s │ %-10s │ $%-7.0f │%n",
+                System.out.printf("  | %-18s | %-10s | $%-7.0f |%n",
                         e.getName(), e.getRole(), e.getSalary());
             }
-            System.out.println("  └────────────────────┴────────────┴──────────┘");
+            System.out.println("  +--------------------+------------+----------+");
         }
         System.out.println();
     }
@@ -131,15 +131,15 @@ public class GameEngine {
             System.out.println("\n  No employees hired yet.\n");
             return;
         }
-        System.out.println("\n  ── EMPLOYEES ───────────────────────────────────────");
-        System.out.println("  ┌────────────────────┬───────────┬───────┬──────────────┐");
-        System.out.println("  │ Name               │ Role      │ Skill │ Productivity │");
-        System.out.println("  ├────────────────────┼───────────┼───────┼──────────────┤");
+        System.out.println("\n  -- EMPLOYEES -----------------------------------------------");
+        System.out.println("  +--------------------+-----------+-------+--------------+");
+        System.out.println("  | Name               | Role      | Skill | Productivity |");
+        System.out.println("  +--------------------+-----------+-------+--------------+");
         for (Employee e : playerCompany.getEmployees()) {
-            System.out.printf("  │ %-18s │ %-9s │ %-5d │ %-12.1fx │%n",
+            System.out.printf("  | %-18s | %-9s | %-5d | %-11.1fx  |%n",
                     e.getName(), e.getRole(), e.getSkill(), e.getProductivity());
         }
-        System.out.println("  └────────────────────┴───────────┴───────┴──────────────┘");
+        System.out.println("  +--------------------+-----------+-------+--------------+");
         System.out.println();
     }
 
@@ -148,23 +148,23 @@ public class GameEngine {
             System.out.println("\n  No projects started yet.\n");
             return;
         }
-        System.out.println("\n  ── PROJECTS ────────────────────────────────────────");
-        System.out.println("  ┌──────────────────────┬───────────┬───────────┬────────────┐");
-        System.out.println("  │ Name                 │ Difficulty│ Revenue   │ Status     │");
-        System.out.println("  ├──────────────────────┼───────────┼───────────┼────────────┤");
+        System.out.println("\n  -- PROJECTS ------------------------------------------------");
+        System.out.println("  +----------------------+-----------+-----------+------------+");
+        System.out.println("  | Name                 | Difficulty| Revenue   | Status     |");
+        System.out.println("  +----------------------+-----------+-----------+------------+");
         for (Project p : playerCompany.getProjects()) {
-            System.out.printf("  │ %-20s │ %-9s │ $%-8.0f │ %-10s │%n",
+            System.out.printf("  | %-20s | %-9s | $%-8.0f | %-10s |%n",
                     p.getName(), p.getDifficulty(), p.getRevenue(), p.getStatus());
         }
-        System.out.println("  └──────────────────────┴───────────┴───────────┴────────────┘");
+        System.out.println("  +----------------------+-----------+-----------+------------+");
         System.out.println();
     }
 
     private void handleHireEmployee(Scanner scanner) throws InsufficientFundsException {
-        System.out.println("\n  ── HIRE EMPLOYEE ───────────────────────────────────");
-        System.out.println("  [1] Developer  — skill × $5,000 salary, 1.2x productivity");
-        System.out.println("  [2] Manager    — skill × $7,000 salary, 0.8x productivity");
-        System.out.println("  [3] Tester     — skill × $3,000 salary, 0.9x productivity");
+        System.out.println("\n  -- HIRE EMPLOYEE -------------------------------------------");
+        System.out.println("  [1] Developer  - skill x $5,000 salary, 1.2x productivity");
+        System.out.println("  [2] Manager    - skill x $7,000 salary, 0.8x productivity");
+        System.out.println("  [3] Tester     - skill x $3,000 salary, 0.9x productivity");
         System.out.print("  Choose type (1-3): ");
         int type;
         try { type = Integer.parseInt(scanner.nextLine().trim()); if (type < 1 || type > 3) type = 1; }
@@ -196,11 +196,11 @@ public class GameEngine {
     }
 
     private void handleStrategicProject(Scanner scanner) throws InsufficientFundsException, InvalidProjectException {
-        System.out.println("\n  ── START PROJECT ───────────────────────────────────");
-        System.out.println("  [1] Easy     — cost $5k,  revenue $15k,  deadline 3 rounds");
-        System.out.println("  [2] Medium   — cost $10k, revenue $30k,  deadline 4 rounds");
-        System.out.println("  [3] Hard     — cost $20k, revenue $60k,  deadline 5 rounds");
-        System.out.println("  [4] Critical — cost $40k, revenue $120k, deadline 6 rounds");
+        System.out.println("\n  -- START PROJECT -------------------------------------------");
+        System.out.println("  [1] Easy     - cost $5k,  revenue $15k,  deadline 3 rounds");
+        System.out.println("  [2] Medium   - cost $10k, revenue $30k,  deadline 4 rounds");
+        System.out.println("  [3] Hard     - cost $20k, revenue $60k,  deadline 5 rounds");
+        System.out.println("  [4] Critical - cost $40k, revenue $120k, deadline 6 rounds");
         System.out.printf("  Your cash: $%.0f%n", playerCompany.getCash());
         System.out.print("  Choose difficulty (1-4): ");
 
@@ -259,7 +259,7 @@ public class GameEngine {
         System.out.println("                    FINAL RESULTS");
         System.out.println("=".repeat(60));
         System.out.println("  ┌─────────────────────────┬─────────────────────────┐");
-        System.out.printf("  │ YOUR COMPANY            │ AI COMPANY              │%n");
+        System.out.printf("  │ %-23s │ %-23s │%n", playerCompany.getName(), aiCompany.getName());
         System.out.printf("  │ Cash: $%-17.0f│ Cash: $%-17.0f│%n",
                 playerCompany.getCash(), aiCompany.getCash());
         System.out.printf("  │ Reputation: %-12.0f│ Reputation: %-12.0f│%n",
