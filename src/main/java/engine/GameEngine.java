@@ -45,28 +45,47 @@ public class GameEngine {
     private void displayWelcome() {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("         WELCOME TO TECHCORP DUEL GAME");
+        System.out.println("=".repeat(60));
+        System.out.println("  Build the most successful tech company in 12 rounds!");
+        System.out.println("  Hire employees, start projects, beat the AI opponent.");
+        System.out.println("  Score = Final Cash + (Reputation x 100)");
         System.out.println("=".repeat(60) + "\n");
     }
 
     private void displayRoundHeader() {
-        System.out.println("\n" + "=".repeat(40));
-        System.out.printf("ROUND %d / %d%n", currentRound, totalRounds);
-        System.out.printf("Your cash: $%.0f | AI cash: $%.0f%n",
+        int repBar = (int) Math.min(20, playerCompany.getTotalReputation() / 5);
+        String bar = "#".repeat(repBar) + "-".repeat(20 - repBar);
+        System.out.println("\n" + "=".repeat(60));
+        System.out.printf("  ROUND %d / %d%n", currentRound, totalRounds);
+        System.out.println("  ┌─────────────────────────┬─────────────────────────┐");
+        System.out.printf("  │ YOUR COMPANY            │ AI COMPANY              │%n");
+        System.out.printf("  │ Cash: $%-17.0f│ Cash: $%-17.0f│%n",
                 playerCompany.getCash(), aiCompany.getCash());
-        System.out.println("=".repeat(40) + "\n");
+        System.out.printf("  │ Reputation: %-12.0f│ Reputation: %-12.0f│%n",
+                playerCompany.getTotalReputation(), aiCompany.getTotalReputation());
+        System.out.printf("  │ Employees: %-13d│ Employees: %-13d│%n",
+                playerCompany.getEmployeeCount(), aiCompany.getEmployeeCount());
+        System.out.printf("  │ Projects: %-14d│ Projects: %-14d│%n",
+                playerCompany.getProjectCount(), aiCompany.getProjectCount());
+        System.out.println("  └─────────────────────────┴─────────────────────────┘");
+        System.out.printf("  Rep Progress: [%s] %.0f pts%n", bar, playerCompany.getTotalReputation());
+        System.out.println("=".repeat(60) + "\n");
     }
 
     private void playRound(Scanner scanner) throws InsufficientFundsException, InvalidProjectException {
-        System.out.println("Your turn:");
-        System.out.println("1. Hire Employee");
-        System.out.println("2. Start Strategic Project");
-        System.out.println("3. Skip");
-        System.out.print("Enter your choice (1-3): ");
+        System.out.println("  Choose your action:");
+        System.out.println("  [1] Hire Employee");
+        System.out.println("  [2] View Company Status");
+        System.out.println("  [3] Start Strategic Project");
+        System.out.println("  [4] View All Employees");
+        System.out.println("  [5] View All Projects");
+        System.out.println("  [6] Skip Turn");
+        System.out.print("  Enter choice (1-6): ");
 
         String input = scanner.nextLine().trim();
         int choice;
-        try { choice = Integer.parseInt(input); if (choice < 1 || choice > 3) choice = 3; }
-        catch (NumberFormatException e) { choice = 3; }
+        try { choice = Integer.parseInt(input); if (choice < 1 || choice > 6) choice = 6; }
+        catch (NumberFormatException e) { choice = 6; }
 
         processPlayerChoice(choice, scanner);
         advanceProjects(playerCompany);
@@ -77,21 +96,82 @@ public class GameEngine {
     private void processPlayerChoice(int choice, Scanner scanner) throws InsufficientFundsException, InvalidProjectException {
         switch (choice) {
             case 1: handleHireEmployee(scanner); break;
-            case 2: handleStrategicProject(scanner); break;
-            default: System.out.println("Skipping turn..."); break;
+            case 2: displayCompanyStatus(); break;
+            case 3: handleStrategicProject(scanner); break;
+            case 4: displayEmployees(); break;
+            case 5: displayProjects(); break;
+            default: System.out.println("  Skipping turn..."); break;
         }
     }
 
+    private void displayCompanyStatus() {
+        System.out.println("\n  ── COMPANY STATUS ──────────────────────────────────");
+        System.out.printf("  Company : %s%n", playerCompany.getName());
+        System.out.printf("  Cash    : $%.0f%n", playerCompany.getCash());
+        System.out.printf("  Rep     : %.0f pts%n", playerCompany.getTotalReputation());
+        System.out.printf("  Score   : %.0f%n", playerCompany.getScore());
+        double totalSalary = playerCompany.getEmployees().stream()
+                .mapToDouble(Employee::getSalary).sum();
+        System.out.printf("  Total Salary Cost: $%.0f%n", totalSalary);
+        if (!playerCompany.getEmployees().isEmpty()) {
+            System.out.println("  ┌────────────────────┬────────────┬──────────┐");
+            System.out.println("  │ Name               │ Role       │ Salary   │");
+            System.out.println("  ├────────────────────┼────────────┼──────────┤");
+            for (Employee e : playerCompany.getEmployees()) {
+                System.out.printf("  │ %-18s │ %-10s │ $%-7.0f │%n",
+                        e.getName(), e.getRole(), e.getSalary());
+            }
+            System.out.println("  └────────────────────┴────────────┴──────────┘");
+        }
+        System.out.println();
+    }
+
+    private void displayEmployees() {
+        if (playerCompany.getEmployees().isEmpty()) {
+            System.out.println("\n  No employees hired yet.\n");
+            return;
+        }
+        System.out.println("\n  ── EMPLOYEES ───────────────────────────────────────");
+        System.out.println("  ┌────────────────────┬───────────┬───────┬──────────────┐");
+        System.out.println("  │ Name               │ Role      │ Skill │ Productivity │");
+        System.out.println("  ├────────────────────┼───────────┼───────┼──────────────┤");
+        for (Employee e : playerCompany.getEmployees()) {
+            System.out.printf("  │ %-18s │ %-9s │ %-5d │ %-12.1fx │%n",
+                    e.getName(), e.getRole(), e.getSkill(), e.getProductivity());
+        }
+        System.out.println("  └────────────────────┴───────────┴───────┴──────────────┘");
+        System.out.println();
+    }
+
+    private void displayProjects() {
+        if (playerCompany.getProjects().isEmpty()) {
+            System.out.println("\n  No projects started yet.\n");
+            return;
+        }
+        System.out.println("\n  ── PROJECTS ────────────────────────────────────────");
+        System.out.println("  ┌──────────────────────┬───────────┬───────────┬────────────┐");
+        System.out.println("  │ Name                 │ Difficulty│ Revenue   │ Status     │");
+        System.out.println("  ├──────────────────────┼───────────┼───────────┼────────────┤");
+        for (Project p : playerCompany.getProjects()) {
+            System.out.printf("  │ %-20s │ %-9s │ $%-8.0f │ %-10s │%n",
+                    p.getName(), p.getDifficulty(), p.getRevenue(), p.getStatus());
+        }
+        System.out.println("  └──────────────────────┴───────────┴───────────┴────────────┘");
+        System.out.println();
+    }
+
     private void handleHireEmployee(Scanner scanner) throws InsufficientFundsException {
-        System.out.println("\n1. Developer  (skill*5000)");
-        System.out.println("2. Manager    (skill*7000)");
-        System.out.println("3. Tester     (skill*3000)");
-        System.out.print("Choose type (1-3): ");
+        System.out.println("\n  ── HIRE EMPLOYEE ───────────────────────────────────");
+        System.out.println("  [1] Developer  — skill × $5,000 salary, 1.2x productivity");
+        System.out.println("  [2] Manager    — skill × $7,000 salary, 0.8x productivity");
+        System.out.println("  [3] Tester     — skill × $3,000 salary, 0.9x productivity");
+        System.out.print("  Choose type (1-3): ");
         int type;
         try { type = Integer.parseInt(scanner.nextLine().trim()); if (type < 1 || type > 3) type = 1; }
         catch (NumberFormatException e) { type = 1; }
 
-        System.out.print("Enter skill level (1-100): ");
+        System.out.printf("  Your cash: $%.0f%n", playerCompany.getCash());
+        System.out.print("  Enter skill level (1-100): ");
         int skill;
         try { skill = Integer.parseInt(scanner.nextLine().trim()); skill = Math.max(1, Math.min(100, skill)); }
         catch (NumberFormatException e) { skill = GameConstants.STARTING_SKILL_LEVEL; }
@@ -111,15 +191,18 @@ public class GameEngine {
 
         playerCompany.deductCash(employee.getSalary());
         playerCompany.hireEmployee(employee);
-        System.out.printf("Hired %s as %s (skill %d, salary $%.0f)%n", name, employee.getRole(), skill, employee.getSalary());
+        System.out.printf("  Hired %s as %s | skill=%d | salary=$%.0f%n",
+                name, employee.getRole(), skill, employee.getSalary());
     }
 
     private void handleStrategicProject(Scanner scanner) throws InsufficientFundsException, InvalidProjectException {
-        System.out.println("\n1. Easy     ($5k budget,  $15k revenue)");
-        System.out.println("2. Medium   ($10k budget, $30k revenue)");
-        System.out.println("3. Hard     ($20k budget, $60k revenue)");
-        System.out.println("4. Critical ($40k budget, $120k revenue)");
-        System.out.print("Choose difficulty (1-4): ");
+        System.out.println("\n  ── START PROJECT ───────────────────────────────────");
+        System.out.println("  [1] Easy     — cost $5k,  revenue $15k,  deadline 3 rounds");
+        System.out.println("  [2] Medium   — cost $10k, revenue $30k,  deadline 4 rounds");
+        System.out.println("  [3] Hard     — cost $20k, revenue $60k,  deadline 5 rounds");
+        System.out.println("  [4] Critical — cost $40k, revenue $120k, deadline 6 rounds");
+        System.out.printf("  Your cash: $%.0f%n", playerCompany.getCash());
+        System.out.print("  Choose difficulty (1-4): ");
 
         int diff;
         try { diff = Integer.parseInt(scanner.nextLine().trim()); if (diff < 1 || diff > 4) diff = 1; }
@@ -147,7 +230,8 @@ public class GameEngine {
         playerCompany.deductCash(budget);
         playerCompany.addProject(project);
         project.startProject(currentRound);
-        System.out.printf("Started '%s' [%s, budget $%.0f, deadline %d rounds]%n", projectName, difficulty, budget, deadline);
+        System.out.printf("  Started '%s' [%s] | cost $%.0f | deadline %d rounds%n",
+                projectName, difficulty, budget, deadline);
     }
 
     private void advanceProjects(Company company) {
@@ -157,26 +241,34 @@ public class GameEngine {
                 if (p.isCompleted()) {
                     company.addCash(p.getRevenue());
                     company.addReputation(p.getReputation());
-                    System.out.printf("[%s] Project '%s' COMPLETED! +$%.0f%n", company.getName(), p.getName(), p.getRevenue());
+                    System.out.printf("  [%s] Project '%s' COMPLETED! +$%.0f +%.0f rep%n",
+                            company.getName(), p.getName(), p.getRevenue(), p.getReputation());
                 } else if (p.isFailed()) {
-                    System.out.printf("[%s] Project '%s' FAILED.%n", company.getName(), p.getName());
+                    System.out.printf("  [%s] Project '%s' FAILED.%n", company.getName(), p.getName());
                 }
             }
         }
     }
 
     private void displayGameResults() {
-        System.out.println("\n" + "=".repeat(40));
-        System.out.println("GAME RESULTS");
-        System.out.println("=".repeat(40));
-        System.out.println(playerCompany);
-        System.out.println(aiCompany);
         double playerScore = playerCompany.getScore();
         double aiScore = aiCompany.getScore();
-        if (playerScore > aiScore) System.out.println("\nYOU WIN!");
-        else if (aiScore > playerScore) System.out.println("\nAI WINS!");
-        else System.out.println("\nIT'S A TIE!");
-        System.out.println("=".repeat(40));
+        String result = playerScore > aiScore ? "YOU WIN!" : (aiScore > playerScore ? "AI WINS!" : "IT'S A TIE!");
+
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("                    FINAL RESULTS");
+        System.out.println("=".repeat(60));
+        System.out.println("  ┌─────────────────────────┬─────────────────────────┐");
+        System.out.printf("  │ YOUR COMPANY            │ AI COMPANY              │%n");
+        System.out.printf("  │ Cash: $%-17.0f│ Cash: $%-17.0f│%n",
+                playerCompany.getCash(), aiCompany.getCash());
+        System.out.printf("  │ Reputation: %-12.0f│ Reputation: %-12.0f│%n",
+                playerCompany.getTotalReputation(), aiCompany.getTotalReputation());
+        System.out.printf("  │ SCORE: %-17.0f│ SCORE: %-17.0f│%n", playerScore, aiScore);
+        System.out.println("  └─────────────────────────┴─────────────────────────┘");
+        System.out.println();
+        System.out.println("  " + result);
+        System.out.println("=".repeat(60));
     }
 
     public int getCurrentRound() { return currentRound; }
