@@ -8,7 +8,7 @@ A console-based turn-by-turn strategy game where you compete against an AI oppon
 
 ## 1. Project Overview
 
-TechCorp Duel Game is a console application built with Java and Spring Boot. Players manage a tech company by hiring employees, starting projects, and competing against an AI opponent across 12 rounds. The player with the highest score (cash + reputation) at the end wins.
+TechCorp Duel Game is a console application built with Java and Spring Boot. Players manage a tech company by hiring employees, starting projects, and competing against an AI opponent across 10 rounds. The player with the highest score (cash + reputation x 100) at the end wins.
 
 Key concepts demonstrated:
 - Object-Oriented Programming (inheritance, polymorphism, encapsulation, abstraction)
@@ -24,8 +24,8 @@ Key concepts demonstrated:
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Java | 11 | Core language |
-| Spring Boot | 2.7.15 | Dependency management, logging (SLF4J) |
+| Java | 17 | Core language |
+| Spring Boot | 3.0.0 | Dependency management, logging (SLF4J) |
 | Maven | 3.9.6 | Build automation |
 | JUnit 5 | 5.9.3 | Unit testing |
 | Docker | - | Containerization |
@@ -38,25 +38,28 @@ Key concepts demonstrated:
 ```
 TechCorp-game/
 ├── src/
-│   └── main/
+│   ├── main/
+│   │   └── java/
+│   │       ├── Main.java                          # Entry point
+│   │       ├── constants/
+│   │       │   └── GameConstants.java             # All game configuration constants
+│   │       ├── domain/
+│   │       │   ├── Company.java                   # Company model (cash, employees, projects)
+│   │       │   ├── Employee.java                  # Abstract base class (Comparable<Employee>)
+│   │       │   ├── Developer.java                 # 1.2x productivity, skill×5000 salary
+│   │       │   ├── Manager.java                   # 0.8x productivity, skill×7000 salary
+│   │       │   ├── Tester.java                    # 0.9x productivity, skill×3000 salary
+│   │       │   └── Project.java                   # Project with Status & Difficulty enums
+│   │       ├── engine/
+│   │       │   ├── GameEngine.java                # Main game loop, player input handling
+│   │       │   └── AIPlayer.java                  # AI opponent with strategy selection
+│   │       └── exceptions/
+│   │           ├── GameException.java             # Base exception (ErrorSeverity enum)
+│   │           ├── InsufficientFundsException.java # Error code: FUNDS_001
+│   │           └── InvalidProjectException.java   # Error code: PROJECT_001
+│   └── test/
 │       └── java/
-│           ├── Main.java                          # Entry point
-│           ├── constants/
-│           │   └── GameConstants.java             # All game configuration constants
-│           ├── domain/
-│           │   ├── Company.java                   # Company model (cash, employees, projects)
-│           │   ├── Employee.java                  # Abstract base class (Comparable<Employee>)
-│           │   ├── Developer.java                 # 1.2x productivity, skill×5000 salary
-│           │   ├── Manager.java                   # 0.8x productivity, skill×7000 salary
-│           │   ├── Tester.java                    # 0.9x productivity, skill×3000 salary
-│           │   └── Project.java                   # Project with Status & Difficulty enums
-│           ├── engine/
-│           │   ├── GameEngine.java                # Main game loop, player input handling
-│           │   └── AIPlayer.java                  # AI opponent with strategy selection
-│           └── exceptions/
-│               ├── GameException.java             # Base exception (ErrorSeverity enum)
-│               ├── InsufficientFundsException.java # Error code: FUNDS_001
-│               └── InvalidProjectException.java   # Error code: PROJECT_001
+│           └── CompanyTest.java                   # 12 JUnit 5 unit tests
 ├── pom.xml                                        # Maven dependencies
 ├── Dockerfile                                     # Docker build configuration
 ├── run.sh                                         # Quick run script
@@ -93,7 +96,7 @@ Exception
 
 | Class | Responsibility |
 |-------|---------------|
-| `Company` | Manages cash, reputation, employees, projects. Score = cash + reputation × 1000 |
+| `Company` | Manages cash, reputation, employees, projects. Score = cash + reputation × 100 |
 | `Project` | Status enum (NOT_STARTED/IN_PROGRESS/COMPLETED/FAILED), Difficulty enum (EASY/MEDIUM/HARD/CRITICAL) |
 | `GameEngine` | Main game loop, player input, advance projects each round |
 | `AIPlayer` | Static class, selects strategy based on cash ratio |
@@ -104,13 +107,16 @@ Exception
 ## 5. Game Rules
 
 - **Starting budget**: $100,000 each (player and AI)
-- **Rounds**: 12 total
+- **Rounds**: 10 total
 - **Each round**, player chooses:
   1. **Hire Employee** — choose type (Developer/Manager/Tester) and skill level (1–100)
-  2. **Start Strategic Project** — choose difficulty (Easy/Medium/Hard/Critical)
-  3. **Skip**
+  2. **View Company Status** — see cash, reputation, score, and salary table
+  3. **Start Strategic Project** — choose difficulty (Easy/Medium/Hard/Critical)
+  4. **View All Employees** — list with skill and productivity
+  5. **View All Projects** — list with difficulty, revenue, status
+  6. **Skip Turn**
 - **Projects** complete after a set number of rounds and reward cash + reputation
-- **Score** = Final Cash + (Total Reputation × 1,000)
+- **Score** = Final Cash + (Total Reputation × 100)
 - Highest score wins!
 
 ### Project Options
@@ -127,7 +133,7 @@ Exception
 ## 6. How to Run
 
 ### Prerequisites
-- Java 11+
+- Java 17+
 - Maven 3.6+
 
 ### Run with script (recommended)
@@ -163,14 +169,14 @@ Key constants validated on startup via static initializer block:
 |----------|-------|
 | PLAYER_STARTING_BUDGET | $100,000 |
 | AI_STARTING_BUDGET | $100,000 |
-| GAME_ROUNDS | 12 |
+| GAME_ROUNDS | 10 |
 | DEVELOPER_SALARY_MULTIPLIER | 5,000 |
 | MANAGER_SALARY_MULTIPLIER | 7,000 |
 | TESTER_SALARY_MULTIPLIER | 3,000 |
 | DEVELOPER_PRODUCTIVITY | 1.2 |
 | MANAGER_PRODUCTIVITY | 0.8 |
 | TESTER_PRODUCTIVITY | 0.9 |
-| REPUTATION_MULTIPLIER | 1,000 |
+| REPUTATION_MULTIPLIER | 100 |
 
 ---
 
